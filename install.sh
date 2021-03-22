@@ -8,7 +8,10 @@ ZIP="fake-course.zip"
 DOWNLOADED_NAME="download.zip"
 # learned the cut trick from here: https://stackoverflow.com/q/965053/3015595
 FOLDER_NAME=$(echo "$ZIP" | cut -d'.' -f1)
-# dry_run=false
+dry_run=true
+# intialize as false
+DRY_RUN=1
+PAYMENT_ID=""
 
 # set stands for setting options for the script
 # -e means exit if something returns a non-zero status
@@ -19,13 +22,51 @@ FOLDER_NAME=$(echo "$ZIP" | cut -d'.' -f1)
 set -eu
 
 # source: https://unix.stackexchange.com/a/433806/363304
-# if "$dry_run"; then
-#   echo "Performing a dry run..."
-#   cmd=echo
-# else
-#   echo "Running installation..."
-#   cmd=''
-# fi
+# TODO this doesn't actually work
+if "$dry_run"; then
+  echo "Performing a dry run..."
+  cmd=echo
+else
+  echo "Running installation..."
+  cmd=''
+fi
+
+parse_args() {
+  # TODO this is a wip
+  # may need to go back to test.sh and test some things first
+  # credit to https://medium.com/@Drew_Stokes/bash-argument-parsing-54f3b81a6a8f
+  PARAMS=""
+  while (( "$#" )); do
+    case "$1" in
+      -d|--dry-run)
+        DRY_RUN=0
+        shift
+        ;;
+      -i|--payment-id)
+        if [ -n "$2" ] && [ "${2:0:1}" != "-" ]; then
+          PAYMENT_ID=$2
+          shift 2
+        else
+          echo "Error: Argument for $1 is missing" >&2
+          exit 1
+        fi
+        ;;
+      -*|--*=) # unsupported flags
+        echo "Error: Unsupported flag $1" >&2
+        exit 1
+        ;;
+      *) # preserve positional arguments
+        PARAMS="$PARAMS \$1\""
+        shift
+        ;;
+    esac
+  done
+  # set positional arguments in their proper place
+  eval set -- "$PARAMS"
+  echo "${PARAMS[*]}"
+  echo "$DRY_RUN"
+  echo "$PAYMENT_ID"
+}
 
 # TODOS
 # 1. Add --dry-run option
@@ -110,5 +151,6 @@ unzip_course() {
 }
 
 # verify_purchase cs_live_a1VHFUz7lYnXOL3PUus13VbktedDQDubwfew8E70EvnS1BTOfNTSUXqO0i
-download_zip
-unzip_course "$DOWNLOADED_NAME"
+# download_zip
+# unzip_course "$DOWNLOADED_NAME"
+parse_args
