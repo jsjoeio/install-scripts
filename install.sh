@@ -25,7 +25,6 @@ set -eu
 # sh install.sh --payment-id cs_live_a1VHFUz7lYnXOL3PUus13VbktedDQDubwfew8E70EvnS1BTOfNTSUXqO0i
 
 # TODOS
-# 1. Add loading spinner: https://stackoverflow.com/questions/12498304/using-bash-to-display-a-progress-indicator
 # 1. Write documentation
 # 1. Refactor everything (like Tad suggested)
 # 1. Deploy script
