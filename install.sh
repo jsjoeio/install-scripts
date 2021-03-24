@@ -28,7 +28,6 @@ set -eu
 # 1. Write documentation
 # 1. Refactor everything (like Tad suggested)
 # 1. Deploy script
-# 1. Test it out
 # 1. Add page to website
 # 1. Plan next step (making actual tutorial/course)
 
@@ -74,6 +73,7 @@ main() {
   $CMD verify_purchase "$PAYMENT_ID"
   $CMD download_zip
   $CMD unzip_course "$DOWNLOADED_NAME"
+  $CMD remove_zip "$DOWNLOADED_NAME"
 }
 
 
@@ -143,6 +143,18 @@ unzip_course() {
       echo "   Please run the install script again"
       exit 1
     fi
+  fi
+}
+
+remove_zip() {
+  # Don't forget the - before the word
+  # Otherwise shellcheck things you're indexing the string
+  local DOWNLOADED_ZIP_NAME="${1:-download.zip}"
+
+  if [ -f "$DOWNLOADED_ZIP_NAME" ]
+  then
+    rm "$DOWNLOADED_ZIP_NAME"
+    echo "$SUCCESS_CHECKMARK Removed zip"
   fi
 }
 
