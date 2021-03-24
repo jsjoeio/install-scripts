@@ -6,10 +6,14 @@ SUCCESS_CHECKMARK=$(printf '\342\234\224\n' | iconv -f UTF-8)
 CROSS_MARK=$(printf '\342\235\214\n' | iconv -f UTF-8)
 ZIP="fake-course.zip"
 DOWNLOADED_NAME="download.zip"
+# TODO change to url that will redirect to raw location once on site
+SCRIPT_LOCATION="https://raw.githubusercontent.com/jsjoeio/install-scripts/main/install.sh"
 SCRIPT_RAW_LOCATION="https://raw.githubusercontent.com/jsjoeio/install-scripts/main/install.sh"
+COURSE_NAME="Fake Course"
 # learned the cut trick from here: https://stackoverflow.com/q/965053/3015595
 FOLDER_NAME=$(echo "$ZIP" | cut -d'.' -f1)
 # intialize as false
+HELP=1
 DRY_RUN=1
 PAYMENT_ID=""
 CMD=""
@@ -37,6 +41,10 @@ main() {
   PARAMS=""
   while (( "$#" )); do
     case "$1" in
+      -h|--help)
+        HELP=0
+        shift
+        ;;
       -d|--dry-run)
         DRY_RUN=0
         shift
@@ -62,6 +70,13 @@ main() {
   done
   # set positional arguments in their proper place
   eval set -- "$PARAMS"
+
+  if [ "$HELP" -eq 0 ]
+  then
+    usage
+    exit 0
+  fi
+
   # source: https://unix.stackexchange.com/a/433806/363304
   if [ "$DRY_RUN" -eq 0 ]; then
     echo "Performing a dry run..."
@@ -160,6 +175,31 @@ remove_zip() {
     rm "$DOWNLOADED_ZIP_NAME"
     echo "$SUCCESS_CHECKMARK Removed zip"
   fi
+}
+
+usage() {
+  install_method="curl -fsSL $SCRIPT_LOCATION | sh -s --"
+
+  cat <<EOF
+Downloads the $COURSE_NAME for paid users.
+
+USAGE:
+  $install_method [OPTIONS] (-i|--payment_id) <payment_id>
+
+OPTIONS:
+  -d, --dry-run
+      Echo the commands for the download process without running them.
+
+  -h, --help
+      Prints help information
+
+ARGS:
+  -i, --payment_id
+      Required. Verifies course purchase.
+      Example: $install_method --payment-id cs_live_a1VHFUz7lYnXOL3PUus13VbktedDQDubwfew8E70EvnS1BTOfNTSUXqO0i
+
+More information can be found at https://github.com/jsjoeio/install-scripts
+EOF
 }
 
 main "$@"
