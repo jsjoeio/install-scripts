@@ -6,6 +6,7 @@ SUCCESS_CHECKMARK=$(printf '\342\234\224\n' | iconv -f UTF-8)
 CROSS_MARK=$(printf '\342\235\214\n' | iconv -f UTF-8)
 ZIP="fake-course.zip"
 DOWNLOADED_NAME="download.zip"
+SCRIPT_RAW_LOCATION="https://raw.githubusercontent.com/jsjoeio/install-scripts/main/install.sh"
 # learned the cut trick from here: https://stackoverflow.com/q/965053/3015595
 FOLDER_NAME=$(echo "$ZIP" | cut -d'.' -f1)
 # intialize as false
@@ -64,6 +65,9 @@ main() {
   # source: https://unix.stackexchange.com/a/433806/363304
   if [ "$DRY_RUN" -eq 0 ]; then
     echo "Performing a dry run..."
+    echo "See the script in your browser:"
+    echo "$SCRIPT_RAW_LOCATION"
+    echo "                    "
     CMD=echo
   else
     echo "Running installation..."
