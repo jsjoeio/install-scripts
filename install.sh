@@ -83,7 +83,7 @@ main() {
   local payment_id="${1:-}"
   if [ -z "$payment_id" ]; then
     echo "$CROSS_MARK ERROR: payment_id is required"
-    echo "   Please run the install script again"
+    echo "   Please run the install script again with --payment-id your_payment_id"
     exit 1
   fi
 
