@@ -30,9 +30,6 @@ set -eu
 # sh install.sh --payment-id cs_live_a1VHFUz7lYnXOL3PUus13VbktedDQDubwfew8E70EvnS1BTOfNTSUXqO0i
 
 # TODOS
-# 1. Write documentation
-# 1. Refactor everything (like Tad suggested)
-# 1. Deploy script
 # 1. Add page to website
 # 1. Plan next step (making actual tutorial/course)
 
@@ -110,7 +107,9 @@ main() {
   # credit for helping me figured this grep string thing out
   # https://linuxize.com/post/how-to-check-if-string-contains-substring-in-bash/
   if printf '%s' "$RESPONSE" | grep -q "paid" ; then
-    echo "$SUCCESS_CHECKMARK Verified purchase"
+    # User doesn't need to see this messsage
+    echo ""
+    # echo "$SUCCESS_CHECKMARK Verified purchase"
   else
     echo "$CROSS_MARK ERROR: could not verify purchase"
     echo "   Please contact joe at joe previte [dot com]"
@@ -126,13 +125,17 @@ download_zip() {
 
   if [ -f "$DOWNLOADED_NAME" ]
   then
-    echo "$SUCCESS_CHECKMARK Course zip already downloaded (skipping download)"
+    # User doesn't need to see this messsage
+    echo ""
+    # echo "$SUCCESS_CHECKMARK Course zip already downloaded (skipping download)"
   else
     echo "Downloading zip..."
     curl --silent "https://raw.githubusercontent.com/jsjoeio/install-scripts/main/$ZIP" -L -o "$DOWNLOADED_NAME"
     if [ -f "$DOWNLOADED_NAME" ]
     then
-      echo "$SUCCESS_CHECKMARK Succesfully downloaded course zip"
+      # User doesn't need to see this messsage
+      # echo "$SUCCESS_CHECKMARK Succesfully downloaded course zip"
+      echo ""
     else
       echo "$CROSS_MARK ERROR: Failed to download course zip"
       echo "   Please run the install script again"
@@ -151,12 +154,11 @@ unzip_course() {
   then
     echo "$SUCCESS_CHECKMARK Course already unzipped (skipping unzip)"
   else
-    # TODO add log level info
     # echo "Unzipping course..."
     unzip -qq -n "$DOWNLOADED_ZIP_NAME"
     if [ -d "$FOLDER_NAME" ]
     then
-      echo "$SUCCESS_CHECKMARK Course unzipped successfully"
+      echo "$SUCCESS_CHECKMARK Successfully downloaded course! 🎉"
     else
       echo "$CROSS_MARK ERROR: Failed to unzip course"
       echo "   Please run the install script again"
@@ -173,7 +175,7 @@ remove_zip() {
   if [ -f "$DOWNLOADED_ZIP_NAME" ]
   then
     rm "$DOWNLOADED_ZIP_NAME"
-    echo "$SUCCESS_CHECKMARK Removed zip"
+    # echo "$SUCCESS_CHECKMARK Removed zip"
   fi
 }
 
