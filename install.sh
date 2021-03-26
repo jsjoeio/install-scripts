@@ -31,6 +31,7 @@ set -eu
 
 # TODOS
 # 1. Add page to website
+# 1. Set up serverless function for payment verification on website
 # 1. Plan next step (making actual tutorial/course)
 
 main() {
