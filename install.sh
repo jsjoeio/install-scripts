@@ -82,6 +82,7 @@ main() {
     echo "                    "
     CMD=echo
   else
+    echo ""
     echo "Downloading course..."
     CMD=''
   fi
@@ -106,11 +107,7 @@ main() {
   RESPONSE=$(curl --silent https://flurly.com/api/verify_redirect/"$payment_id")
   # credit for helping me figured this grep string thing out
   # https://linuxize.com/post/how-to-check-if-string-contains-substring-in-bash/
-  if printf '%s' "$RESPONSE" | grep -q "paid" ; then
-    # User doesn't need to see this messsage
-    echo ""
-    # echo "$SUCCESS_CHECKMARK Verified purchase"
-  else
+  if ! printf '%s' "$RESPONSE" | grep -q "paid" ; then
     echo "$CROSS_MARK ERROR: could not verify purchase"
     echo "   Please contact joe at joe previte [dot com]"
     exit 1
@@ -123,20 +120,12 @@ download_zip() {
   # But eventually, I may want to run a cURL to an endpoint
   # which then verifies the purchase again and it it's legit, downloads the course
 
-  if [ -f "$DOWNLOADED_NAME" ]
+  if ! [ -f "$DOWNLOADED_NAME" ]
   then
-    # User doesn't need to see this messsage
-    echo ""
-    # echo "$SUCCESS_CHECKMARK Course zip already downloaded (skipping download)"
-  else
     # echo "Downloading zip..."
     curl --silent "https://raw.githubusercontent.com/jsjoeio/install-scripts/main/$ZIP" -L -o "$DOWNLOADED_NAME"
-    if [ -f "$DOWNLOADED_NAME" ]
+    if ! [ -f "$DOWNLOADED_NAME" ]
     then
-      # User doesn't need to see this messsage
-      # echo "$SUCCESS_CHECKMARK Succesfully downloaded course zip"
-      echo ""
-    else
       echo "$CROSS_MARK ERROR: Failed to download course zip"
       echo "   Please run the install script again"
       exit 1
@@ -150,10 +139,8 @@ unzip_course() {
   local DOWNLOADED_ZIP_NAME="${1:-download.zip}"
 
   # Check that the directory exists
-  if [ -d "$FOLDER_NAME" ]
+  if ! [ -d "$FOLDER_NAME" ]
   then
-    echo "$SUCCESS_CHECKMARK Course already unzipped (skipping unzip)"
-  else
     # echo "Unzipping course..."
     unzip -qq -n "$DOWNLOADED_ZIP_NAME"
     if [ -d "$FOLDER_NAME" ]
