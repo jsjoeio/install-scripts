@@ -82,7 +82,6 @@ main() {
     echo "                    "
     CMD=echo
   else
-    echo ""
     echo "Downloading course..."
     CMD=''
   fi
