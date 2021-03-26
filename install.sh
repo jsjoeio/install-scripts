@@ -6,8 +6,7 @@ SUCCESS_CHECKMARK=$(printf '\342\234\224\n' | iconv -f UTF-8)
 CROSS_MARK=$(printf '\342\235\214\n' | iconv -f UTF-8)
 ZIP="fake-course.zip"
 DOWNLOADED_NAME="download.zip"
-# TODO change to url that will redirect to raw location once on site
-SCRIPT_LOCATION="https://raw.githubusercontent.com/jsjoeio/install-scripts/main/install.sh"
+SCRIPT_LOCATION="https://joeprevite.com/download-course.sh"
 SCRIPT_RAW_LOCATION="https://raw.githubusercontent.com/jsjoeio/install-scripts/main/install.sh"
 COURSE_NAME="Fake Course"
 # learned the cut trick from here: https://stackoverflow.com/q/965053/3015595
