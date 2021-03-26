@@ -82,7 +82,7 @@ main() {
     echo "                    "
     CMD=echo
   else
-    echo "Running installation..."
+    echo "Downloading course..."
     CMD=''
   fi
 
@@ -129,7 +129,7 @@ download_zip() {
     echo ""
     # echo "$SUCCESS_CHECKMARK Course zip already downloaded (skipping download)"
   else
-    echo "Downloading zip..."
+    # echo "Downloading zip..."
     curl --silent "https://raw.githubusercontent.com/jsjoeio/install-scripts/main/$ZIP" -L -o "$DOWNLOADED_NAME"
     if [ -f "$DOWNLOADED_NAME" ]
     then
