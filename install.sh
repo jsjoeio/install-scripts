@@ -26,11 +26,9 @@ CMD=""
 set -eu
 
 # Testing this script
-# sh install.sh --payment-id cs_live_a1VHFUz7lYnXOL3PUus13VbktedDQDubwfew8E70EvnS1BTOfNTSUXqO0i
+# sh install.sh --paymentId cs_live_a1VHFUz7lYnXOL3PUus13VbktedDQDubwfew8E70EvnS1BTOfNTSUXqO0i
 
 # TODOS
-# 1. Add page to website
-# 1. Set up serverless function for payment verification on website
 # 1. Plan next step (making actual tutorial/course)
 
 main() {
@@ -46,7 +44,7 @@ main() {
         DRY_RUN=0
         shift
         ;;
-      -i|--payment-id)
+      -i|--paymentId)
         if [ -n "$2" ] && [ "${2:0:1}" != "-" ]; then
           PAYMENT_ID=$2
           shift 2
@@ -99,30 +97,29 @@ main() {
   local payment_id="${1:-}"
   if [ -z "$payment_id" ]; then
     echo "$CROSS_MARK ERROR: payment_id is required"
-    echo "   Please run the install script again with --payment-id your_payment_id"
+    echo "   Please run the install script again with --paymentId your_payment_id"
     exit 1
   fi
 
-  RESPONSE=$(curl --silent https://flurly.com/api/verify_redirect/"$payment_id")
+  RESPONSE=$(curl --silent "https://joeprevite.com/.netlify/functions/verify-course-purchase?paymentId=$payment_id")
   # credit for helping me figured this grep string thing out
   # https://linuxize.com/post/how-to-check-if-string-contains-substring-in-bash/
-  if ! printf '%s' "$RESPONSE" | grep -q "paid" ; then
+  if ! printf '%s' "$RESPONSE" | grep -q "true" ; then
     echo "$CROSS_MARK ERROR: could not verify purchase"
     echo "   Please contact joe at joe previte [dot com]"
     exit 1
   fi
 
+  # grab download link
+  # credit for the awk solution: https://www.unix.com/shell-programming-and-scripting/217425-url-extraction-json-file.html
+  DOWNLOAD_LINK=$(echo "$RESPONSE" | awk -F'"' '{ for(i=1; i<=NF; i++) { if($i ~ /^http/) print $i } } ')
 }
 
 download_zip() {
-  # Note: for now, I'll just download it from this open source GitHub repo
-  # But eventually, I may want to run a cURL to an endpoint
-  # which then verifies the purchase again and it it's legit, downloads the course
-
   if ! [ -f "$DOWNLOADED_NAME" ]
   then
     # echo "Downloading zip..."
-    curl --silent "https://raw.githubusercontent.com/jsjoeio/install-scripts/main/$ZIP" -L -o "$DOWNLOADED_NAME"
+    curl --silent "$DOWNLOAD_LINK" -L -o "$DOWNLOADED_NAME"
     if ! [ -f "$DOWNLOADED_NAME" ]
     then
       echo "$CROSS_MARK ERROR: Failed to download course zip"
@@ -172,7 +169,7 @@ usage() {
 Downloads the $COURSE_NAME for paid users.
 
 USAGE:
-  $install_method [OPTIONS] (-i|--payment_id) <payment_id>
+  $install_method [OPTIONS] (-i|--paymentId) <paymentId>
 
 OPTIONS:
   -d, --dry-run
@@ -182,9 +179,9 @@ OPTIONS:
       Prints help information
 
 ARGS:
-  -i, --payment_id
+  -i, --paymentId
       Required. Verifies course purchase.
-      Example: $install_method --payment-id cs_live_a1VHFUz7lYnXOL3PUus13VbktedDQDubwfew8E70EvnS1BTOfNTSUXqO0i
+      Example: $install_method --paymentId cs_live_a1VHFUz7lYnXOL3PUus13VbktedDQDubwfew8E70EvnS1BTOfNTSUXqO0i
 
 More information can be found at https://github.com/jsjoeio/install-scripts
 EOF
