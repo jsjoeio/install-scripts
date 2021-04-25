@@ -2,7 +2,7 @@
 
 zip_course() {
  echo "zipping up course..."
- zip -r fake-course.zip fake-course
+ cd fake-course; zip -r ../fake-course.zip *
 }
 
 zip_course
