@@ -2,6 +2,8 @@
 
 Hello! This is a demo course to give you a feel for jp-courses and what the experience feels like.
 
+To get started, run `./jp-courses start` and go to localhost:3000 in your browser.
+
 ## TypeScript Course: Coming Soon!
 
 I'm working on a TypeScript course, which will use this same format.
