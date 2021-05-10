@@ -1,8 +1,10 @@
-# TypeScript Course
+# Demo Course
 
-Hello! This will eventually be the `README.md` for my upcoming TypeScript course.
+Hello! This is a demo course to give you a feel for jp-courses and what the experience feels like.
 
-## Follow Along
+## TypeScript Course: Coming Soon!
+
+I'm working on a TypeScript course, which will use this same format.
 
 For updates, subscribe to this Telegram channel: https://t.me/jsjoeio_ts_course
 
